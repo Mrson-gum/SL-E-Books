@@ -1,0 +1,153 @@
+{
+  "entities": {
+    "Book": {
+      "title": "Book",
+      "description": "Represents an E-Book with cover details, metadata, and optional owner association.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "description": { "type": "string" },
+        "genre": { "type": "string" },
+        "coverType": { "type": "string", "enum": ["gradient", "image"] },
+        "coverUrl": { "type": "string" },
+        "coverGradientIndex": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "custom": { "type": "boolean" },
+        "ownerId": { "type": "string" },
+        "ownerEmail": { "type": "string" },
+        "isPublished": { "type": "boolean" },
+        "parts": { "type": "array" }
+      },
+      "required": ["id", "title", "author", "genre", "coverType", "coverGradientIndex", "createdAt"]
+    },
+    "Chapter": {
+      "title": "Chapter",
+      "description": "Represents a chapter inside an E-Book, stored in a subcollection.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "order": { "type": "number" },
+        "partId": { "type": "string" }
+      },
+      "required": ["id", "title", "content"]
+    },
+    "ReadingProgress": {
+      "title": "ReadingProgress",
+      "description": "Keeps track of a user's progress per book (the last read chapter id).",
+      "type": "object",
+      "properties": {
+        "chapterId": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["chapterId", "updatedAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Represents public profile of an author or user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "bio": { "type": "string" },
+        "avatarIndex": { "type": "number" },
+        "avatarUrl": { "type": "string" },
+        "followersCount": { "type": "number" },
+        "followingCount": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "displayName", "bio", "followersCount", "followingCount", "createdAt"]
+    },
+    "Follow": {
+      "title": "Follow",
+      "description": "Represents follow relationships between readers and authors.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "followerId": { "type": "string" },
+        "followedId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "followerId", "followedId", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A mailbox message sent between users or feedback to authors.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderEmail": { "type": "string" },
+        "senderName": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "receiverName": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["id", "senderId", "senderEmail", "senderName", "receiverId", "receiverName", "title", "content", "createdAt", "isRead"]
+    },
+    "BookLike": {
+      "title": "BookLike",
+      "description": "Represents an individual user's like on an E-Book.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "bookId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "bookId", "createdAt"]
+    },
+    "BookRead": {
+      "title": "BookRead",
+      "description": "Represents an individual user's unique read of an E-Book, ensuring unique count.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "bookId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "bookId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/books/{bookId}": {
+      "schema": { "$ref": "#/entities/Book" },
+      "description": "Global list of all available books (presets and user uploads)."
+    },
+    "/books/{bookId}/chapters/{chapterId}": {
+      "schema": { "$ref": "#/entities/Chapter" },
+      "description": "The individual sections/chapters of an E-Book for reading."
+    },
+    "/users/{userId}/progress/{bookId}": {
+      "schema": { "$ref": "#/entities/ReadingProgress" },
+      "description": "User specific book progression markers."
+    },
+    "/profiles/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Public display and details profile page per user."
+    },
+    "/follows/{followId}": {
+      "schema": { "$ref": "#/entities/Follow" },
+      "description": "Follow mappings."
+    },
+    "/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "User specific secure messaging and author mailboxes."
+    },
+    "/likes/{likeId}": {
+      "schema": { "$ref": "#/entities/BookLike" },
+      "description": "Record of user's liked books."
+    },
+    "/reads/{readId}": {
+      "schema": { "$ref": "#/entities/BookRead" },
+      "description": "Records representing unique reading hits per book by user."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "SL E-books",
+  "description": "SL E-books platform to upload, read, and edit custom books.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
